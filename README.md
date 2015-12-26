@@ -1,5 +1,11 @@
-PHP Stripe Library
-==================
+## Looking for mantainer
+========================
+
+Is a long time since I wrote this library, by now I'm no longer using CI or even PHP; if anyone is interested in
+maintining it please let me know, __I will remove the repo 25-Jan-2016__
+
+# PHP Stripe Library
+====================
 
 Recently I received an invitation for stripe.com, is a fantastic payment gateway/processor service.
 Their main focus, as far as I can tell at least, is precisely developers and they have a pretty amazing API and
