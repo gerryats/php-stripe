@@ -1,10 +1,18 @@
+# UPDATE
+====================
+I will be working on updating this library over the next few weeks to get it on par with all of Stripes newest features.
+
+Big thanks to @bcessa for starting & sharing this project, as many of you I have used this library countless times.
+
+WTS
+
 ## Looking for mantainer
 ========================
 
 Is a long time since I wrote this library, by now I'm no longer using CI or even PHP; if anyone is interested in
 maintining it please let me know, __I will remove the repo 25-Jan-2016__
 
-# PHP Stripe Library
+## PHP Stripe Library
 ====================
 
 Recently I received an invitation for stripe.com, is a fantastic payment gateway/processor service.
