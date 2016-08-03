@@ -6,7 +6,6 @@ Big thanks to @bcessa for starting & sharing this project, as many of you I have
 
 WTS
 
-
 ## PHP Stripe Library
 ====================
 
