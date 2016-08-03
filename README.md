@@ -6,11 +6,6 @@ Big thanks to @bcessa for starting & sharing this project, as many of you I have
 
 WTS
 
-## Looking for mantainer
-========================
-
-Is a long time since I wrote this library, by now I'm no longer using CI or even PHP; if anyone is interested in
-maintining it please let me know, __I will remove the repo 25-Jan-2016__
 
 ## PHP Stripe Library
 ====================
