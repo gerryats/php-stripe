@@ -1,6 +1,6 @@
 # UPDATE
 ====================
-I will be working on updating this library over the next few weeks to get it on par with all of Stripes newest features.
+I will be working on updating this library over the next few Months to get it on par with all of Stripes newest features.
 
 Big thanks to @bcessa for starting & sharing this project, as many of you I have used this library countless times.
 
