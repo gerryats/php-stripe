@@ -1,10 +1,11 @@
 # UPDATE
 ====================
+
 I will be working on updating this library over the next few Months to get it on par with all of Stripes newest features.
 
 Big thanks to @bcessa for starting & sharing this project, as many of you I have used this library countless times.
 
-WTS
+## I NOW HAVE SOME TIME TO WORK ON THIS PROJECT AND YOU CAN EXPECT UPDATES BY THE END OF THE MONTH STARTING WIL THE MOST BASIC FUNCTIONALITIES AND ENDING WITH STRIPE CONNECT, RELAY ETC (June 2017)
 
 ## PHP Stripe Library
 ====================
