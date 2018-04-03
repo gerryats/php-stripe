@@ -108,24 +108,32 @@ class Stripe {
 	}
 	
 	/**
-	 * Register a new customer on system
+	 * Creates a new customer object. https://stripe.com/docs/api#create_customer
 	 * 
-	 * @param  mixed         This can be a card token generated with stripe.js ( recommended ) or
-	 *                       an array with the card information: number, exp_month, exp_year, cvc, name
-	 * @param  string        The customer email address, useful as reference
-	 * @param  string        A free form reference for the customer record
-	 * @param  string        A subscription plan identifier to add the customer to it
+	 * @param  mixed        The source can either be a Token’s or a Source’s ID, as returned by Elements,
+	 *                        or a dictionary containing a user’s credit card details (object (The type of payment source. Should be "card".), exp_month, exp_year, number, address_city .etc ).
+	 * @param  string        Customer’s email address. It’s displayed alongside the customer in your dashboard and can be useful for searching and tracking. This may be up to 512 characters. This will be unset if you POST an empty value.
+	 * @param  string        An arbitrary string that you can attach to a customer object. It is displayed alongside the customer in the dashboard.
+	 * @param  int        An integer amount in pence that is the starting account balance for your customer. A negative amount represents a credit that will be used before attempting any charges to the customer’s card; a positive amount will be added to the next invoice.
+	 * @param  string  The customer’s VAT identification number. If you are using Relay, this field gets passed to tax provider you are using for your orders.
+	 * @param  string If you provide a coupon code, the customer will have a discount applied on all recurring charges. Charges you create through the API will not have the discount.
+	 * @param  string  Default source
+	 * @param  array A set of key/value pairs that you can attach to a customer object. It can be useful for storing additional information about the customer in a structured format.
+	 * @param  dictionary (address, name, phone)
 	 */
-	public function customer_create( $card, $email, $desc = NULL, $plan = NULL ) {
+	public function customer_create( $source, $email, $desc = NULL, $account_balance = NULL, $business_vat_id = NULL, $coupon = NULL, $default_source = NULL, $metadata = NULL, $shipping = NULL ) {
 		$params = array(
-			'card' => $card,
+			'source' => $source,
 			'email' => $email
 		);
-		if( $desc )
-			$params['description'] = $desc;
-		if( $plan )
-			$params['plan'] = $plan;
-			
+		if( $desc ) $params['description'] = $desc;
+		if( $account_balance ) $params['account_balance'] = $account_balance;
+		if( $business_vat_id ) $params['business_vat_id'] = $business_vat_id;
+		if( $coupon ) $params['coupon'] = $coupon;
+		if( $default_source ) $params['default_source'] = $default_source;
+		if( $metadata ) $params['metadata'] = $metadata;
+		if( $shipping ) $params['shipping'] = $shipping;
+
 		return $this->_send_request( 'customers', $params, STRIPE_METHOD_POST );
 	}
 	
