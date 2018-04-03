@@ -138,20 +138,20 @@ class Stripe {
 	}
 	
 	/**
-	 * Retrieve information for a given customer
+	 * Retrieve a customer
 	 * 
-	 * @param  string        The customer ID to get information about
+	 * @param  string  The identifier of the customer to be retrieved.
 	 */
 	public function customer_info( $customer_id ) {
 		return $this->_send_request( 'customers/'.$customer_id );
 	}
 	
 	/**
-	 * Update an existing customer record
+	 * Update a customer https://stripe.com/docs/api#update_customer
 	 * 
 	 * @param  string        The customer ID for the record to update
 	 * @param  array         An array containing the new data for the user, you may use the
-	 *                       following keys: card, email, description
+	 *                       following keys: account_balance, business_vat_id, coupon, default_source, description, email, metadata, shipping, source, 
 	 */
 	public function customer_update( $customer_id, $newdata ) {
 		return $this->_send_request( 'customers/'.$customer_id, $newdata, STRIPE_METHOD_POST );
