@@ -189,16 +189,25 @@ class Stripe {
 	}
 	
 	/**
-	 * Subscribe a customer to a plan
+	 * Create a subscription.  https://stripe.com/docs/api#create_subscription
 	 * 
-	 * @param  string        The customer ID
-	 * @param  string        The plan identifier
-	 * @param  array         Configuration options for the subscription: prorate, coupon, trial_end(stamp)
+	 * @param  string        The identifier of the customer to subscribe.
+	 * @param  string        Hash describing the plan the customer is subscribed to.
+	 * @param  array         Configuration options for the subscription:items, billing, prorate, coupon, trial_end etc.
 	 */
 	public function customer_subscribe( $customer_id, $plan_id, $options = array() ) {
-		$options['plan'] = $plan_id;
+		$params = array('customer' => $customer_id, 'plan' => $plan_id);
+
+		$sub_options = array(
+			'application_fee_percent', 'billing', 'billing_cycle_anchor', 'coupon', 'days_until_due', 'items',
+			'metadata', 'prorate', 'source', 'tax_percent', 'trial_end', 'trial_period_days'
+		);
+
+		foreach($options as $key => $value){
+			if(in_array($key, $sub_options)) $params[$key] = $value;
+		}
 		
-		return $this->_send_request( 'customers/'.$customer_id.'/subscription', $options, STRIPE_METHOD_POST );
+		return $this->_send_request( 'subscriptions', $params, STRIPE_METHOD_POST );
 	}
 	
 	/**
