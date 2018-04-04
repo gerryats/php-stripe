@@ -249,18 +249,17 @@ class Stripe {
 	}
 	
 	/**
-	 * Generate a new single-use stripe card token
+	 * Create a card token. https://stripe.com/docs/api#create_card_token
 	 * 
-	 * @param  array         An array containing the credit card data, with the following keys:
-	 *                       number, cvc, exp_month, exp_year, name
-	 * @param  int           If the token will be used on a charge, this is the amount to charge for
+	 * @param  mixed  The card this token will represent. If you also pass in a customer, the card must be the ID of a card belonging to the customer. Otherwise, if you do not pass in a customer, this is a dictionary containing a user's credit card details, with the options described below.
+	 *                       exp_month, exp_year, number, address_city, address_country, address_line1, address_line2, address_state, address_zip, currency, cvc, name
+	 * @param  string  The customer (owned by the application's account) for which to create a token.
 	 */
-	public function card_token_create( $card_data, $amount ) {
-		$params = array(
-			'card' => $card_data,
-			'amount' => $amount,
-			'currency' => 'usd'
-		);
+	public function card_token_create( $card = NULL, $customer = NULL) {
+		$params = array();
+
+		if($card) $params['card'] = $card;
+		if($customer) $params['customer'] = $customer;
 		
 		return $this->_send_request( 'tokens', $params, STRIPE_METHOD_POST );
 	}
