@@ -265,9 +265,9 @@ class Stripe {
 	}
 	
 	/**
-	 * Get information about a card token
+	 * Retrieve a token. https://stripe.com/docs/api#retrieve_token
 	 * 
-	 * @param  string        The card token ID to get the information
+	 * @param  string        The ID of the desired token.
 	 */
 	public function card_token_info( $token_id ) {
 		return $this->_send_request( 'tokens/'.$token_id );
