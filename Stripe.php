@@ -224,12 +224,28 @@ class Stripe {
 	}
 	
 	/**
-	 * Get the next upcoming invoice for a given customer
+	 * Retrieve an upcoming invoice. https://stripe.com/docs/api#upcoming_invoice
 	 * 
-	 * @param  string        Customer ID to get the invoice from
+	 * @param  string        The identifier of the customer whose upcoming invoice you’d like to retrieve.
+	 * @param  array         Configuration options for the upcoming invoice: coupon, subscription, subscription_tax_percent etc.
 	 */
-	public function customer_upcoming_invoice( $customer_id ) {
-		return $this->_send_request( 'invoices/upcoming?customer='.$customer_id );
+	public function customer_upcoming_invoice( $customer_id, $options = array() ) {
+		$url = 'invoices/upcoming';
+		$params = array('customer'=>$customer_id);
+
+		$sub_options = array(
+			'coupon', 'invoice_items', 'subscription', 'subscription_billing_cycle_anchor', 'subscription_items',
+			'subscription_prorate', 'subscription_proration_date', 'subscription_tax_percent', 'subscription_trial_end'
+		);
+
+		foreach($options as $key => $value){
+			if(in_array($key, $sub_options)) $params[$key] = $value;
+		}
+
+		$query_string = http_build_query($params);
+		$url .=  '?'.$query_string;
+
+		return $this->_send_request( $url );
 	}
 	
 	/**
