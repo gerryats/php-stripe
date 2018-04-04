@@ -301,29 +301,41 @@ class Stripe {
 	}
 	
 	/**
-	 * Retrieve information about a given plan
+	 * Retrieve a plan. https://stripe.com/docs/api#retrieve_plan
 	 * 
-	 * @param  string        The plan identifier you wish to get info about
+	 * @param  string  The ID of the desired plan.
 	 */
 	public function plan_info( $plan_id ) {
 		return $this->_send_request( 'plans/'.$plan_id );
 	}
 	
 	/**
-	 * Delete a plan from the system
+	 * Delete a plan. https://stripe.com/docs/api#delete_plan
 	 * 
-	 * @param  string        The identifier of the plan you want to delete
+	 * @param  string   The identifier of the plan to be deleted.
 	 */
 	public function plan_delete( $plan_id ) {
 		return $this->_send_request( 'plans/'.$plan_id, array(), STRIPE_METHOD_DELETE );
 	}
 	
 	/**
-	 * Retrieve a list of the plans in the system
+	 * List all plans.  https://stripe.com/docs/api#list_plans
+	 *
+	 * @param int  A limit on the number of objects to be returned. Limit can range between 1 and 100, and the default is 10.
+	 * @param int  Offset that defines your place in the list. 
+	 * @param mixed A filter on the list based on the object created field. The value can be a string with an integer Unix timestamp, or it can be a dictionary.
+	 * @param string A cursor for use in pagination. An object ID that defines your place in the list.
+	 * @param string A cursor for use in pagination. An object ID that defines your place in the list.
+	 * @param string  Only return plans for the given product.
 	 */
-	public function plan_list( $count = 10, $offset = 0 ) {
-		$params['count'] = $count;
+	public function plan_list( $limit = 10, $offset = 0, $created = NULL, $ending_before = NULL, $starting_after = NULL, $product = NULL ) {
+		$params['limit'] = $limit;
 		$params['offset'] = $offset;
+		if($created) $params['created'] = $created;
+		if($ending_before) $params['ending_before'] = $ending_before;
+		if($starting_after) $params['starting_after'] = $starting_after;
+		if($product) $params['product'] = $product;
+
 		$vars = http_build_query( $params, NULL, '&' );
 		
 		return $this->_send_request( 'plans?'.$vars );
