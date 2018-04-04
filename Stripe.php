@@ -138,7 +138,7 @@ class Stripe {
 	}
 	
 	/**
-	 * Retrieve a customer
+	 * Retrieve a customer. https://stripe.com/docs/api#retrieve_customer
 	 * 
 	 * @param  string  The identifier of the customer to be retrieved.
 	 */
@@ -158,23 +158,31 @@ class Stripe {
 	}
 	
 	/**
-	 * Delete an existing customer record
+	 * Delete a customer. https://stripe.com/docs/api#delete_customer
 	 * 
-	 * @param  string        The customer ID of the record to delete
+	 * @param  string  The identifier of the customer to be deleted.
 	 */
 	public function customer_delete( $customer_id ) {
 		return $this->_send_request( 'customers/'.$customer_id, array(), STRIPE_METHOD_DELETE );
 	}
 	
 	/**
-	 * Get a list of customers record ordered by creation date
+	 * List all customers. https://stripe.com/docs/api#list_customers
 	 * 
 	 * @param  int           The number of customers to return, default 10, max 100
 	 * @param  int           Offset to apply to the list, default 0
+	 * @param  dictionary  A filter on the list based on the object created field.
+	 * @param  string  A filter on the list based on the customer’s email field. The value must be a string. This will be unset if you POST an empty value.
+	 * @param  string A cursor for use in pagination. An object ID that defines your place in the list. 
+	 * @param  string A cursor for use in pagination. An object ID that defines your place in the list. 
 	 */
-	public function customer_list( $count = 10, $offset = 0 ) {
-		$params['count'] = $count;
+	public function customer_list( $limit = 10, $offset = 0, $created = NULL, $email = NULL, $ending_before = NULL, $starting_after = NULL ) {
+		$params['limit'] = $limit;
 		$params['offset'] = $offset;
+		if($created) $params['created'] = $created;
+		if($email) $params['email'] = $email;
+		if($ending_before) $params['ending_before'] = $ending_before;
+		if($starting_after) $params['starting_after'] = $starting_after;
 		$vars = http_build_query( $params, NULL, '&' );
 		
 		return $this->_send_request( 'customers?'.$vars );
