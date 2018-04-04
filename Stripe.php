@@ -358,26 +358,38 @@ class Stripe {
 	}
 	
 	/**
-	 * Get infomation about a specific invoice
+	 * Retrieve an invoice. https://stripe.com/docs/api#retrieve_invoice
 	 * 
-	 * @param  string        The invoice ID
+	 * @param  string   The identifier of the desired invoice.
 	 */
 	public function invoice_info( $invoice_id ) {
 		return $this->_send_request( 'invoices/'.$invoice_id );
 	}
 	
 	/**
-	 * Get a list of invoices on the system
+	 * List all invoices. https://stripe.com/docs/api#list_invoices
 	 * 
-	 * @param  string        Customer ID to retrieve invoices only for a given customer
-	 * @param  int           Number of invoices to retrieve, default 10, max 100
-	 * @param  int           Offset to start the list from, default 0
+	 * @param  string   Only return invoices for the customer specified by this customer ID.
+	 * @param  int    A limit on the number of objects to be returned. Limit can range between 1 and 100, and the default is 10.
+	 * @param  int   Offset to start the list from, default 0.
+	 * @param string The billing mode of the invoice to retrieve. Either charge_automatically or send_invoice.
+	 * @param mixed A filter on the list based on the object date field. The value can be a string with an integer Unix timestamp, or it can be a dictionary.
+	 * @param mixed A filter on the list based on the object due_date field. The value can be a string with an integer Unix timestamp, or it can be a dictionary.
+	 * @param string A cursor for use in pagination. An object ID that defines your place in the list.
+	 * @param string A cursor for use in pagination. An object ID that defines your place in the list. 
+	 * @param string Only return invoices for the subscription specified by this subscription ID.
 	 */
-	public function invoice_list( $customer_id = NULL, $count = 10, $offset = 0 ) {
-		$params['count'] = $count;
+	public function invoice_list( $customer_id = NULL, $limit = 10, $offset = 0, $billing = NULL, $date = NULL, $due_date = NULL, $ending_before = NULL, $starting_after = NULL, $subscription = NULL ) {
+		$params['limit'] = $limit;
 		$params['offset'] = $offset;
-		if( $customer_id )
-			$params['customer'] = $customer_id;
+		if( $customer_id ) $params['customer'] = $customer_id;
+		if( $billing ) $params['billing'] = $billing;
+		if( $date ) $params['date'] = $date;
+		if( $due_date ) $params['due_date'] = $due_date;
+		if( $ending_before ) $params['ending_before'] = $ending_before;
+		if( $starting_after ) $params['starting_after'] = $starting_after;
+		if( $subscription ) $params['subscription'] = $subscription;
+
 		$vars = http_build_query( $params, NULL, '&' );
 		
 		return $this->_send_request( 'invoices?'.$vars );
