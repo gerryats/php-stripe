@@ -211,14 +211,14 @@ class Stripe {
 	}
 	
 	/**
-	 * Cancel a customer's subscription
+	 * Cancel a subscription.  https://stripe.com/docs/api#cancel_subscription
 	 * 
-	 * @param  string        The customer ID
-	 * @param  boolean       Cancel the subscription immediately( FALSE ) or at the end of the current period( TRUE )
+	 * @param  string        The subscription ID
+	 * @param  boolean   A flag that, if set to true, will delay the subscription’s cancellation until the end of the current period.
 	 */
-	public function customer_unsubscribe( $customer_id, $at_period_end = TRUE ) {
-		$at_period_end ? $pend = 'true' : $pend = 'false';
-		$url = 'customers/'.$customer_id.'/subscription?at_period_end='.$pend;
+	public function customer_unsubscribe( $subscription_id, $at_period_end = FALSE ) {
+		$url = 'subscriptions/'.$subscription_id;
+		if($at_period_end) $url .= '?at_period_end=true';
 		 
 		return $this->_send_request( $url, array(), STRIPE_METHOD_DELETE );
 	}
