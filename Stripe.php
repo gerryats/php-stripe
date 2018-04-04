@@ -308,6 +308,22 @@ class Stripe {
 	public function plan_info( $plan_id ) {
 		return $this->_send_request( 'plans/'.$plan_id );
 	}
+
+	/**
+	 * Update a plan. https://stripe.com/docs/api#update_plan
+	 * 
+	 * @param  string  The identifier of the plan to be updated.
+	 * @param  array  A set of key/value pairs that you can attach to a plan object. It can be useful for storing additional information about the plan in a structured format.
+	 * @param  string  A brief description of the plan, hidden from customers. This will be unset if you POST an empty value.
+	 * @param  string  The product the plan belongs to. Note that after updating, statement descriptors and line items of the plan in active subscriptions will be affected.
+	 */
+	public function plan_update( $plan_id, $metadata = NULL, $nickname = NULL, $product = NULL ) {
+		$params = array();
+		if($metadata) $params['metadata'] = $metadata;
+		if($nickname) $params['nickname'] = $nickname;
+		if($product) $params['product'] = $product;
+		return $this->_send_request( 'plans/'.$plan_id, $params, STRIPE_METHOD_POST );
+	}
 	
 	/**
 	 * Delete a plan. https://stripe.com/docs/api#delete_plan
