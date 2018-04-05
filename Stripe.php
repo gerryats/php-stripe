@@ -34,19 +34,30 @@ class Stripe {
 	}
 	
 	/**
-	 * Create and apply a charge to an existent user based on it's customer_id
+	 * Create a charge - customer.  https://stripe.com/docs/api#create_charge
 	 * 
-	 * @param  int           The amount to charge in cents ( USD ) 
-	 * @param  string        The customer id of the charge subject
-	 * @param  string        A free form reference for the charge
+	 * @param  int           A positive integer representing how much to charge, in the smallest currency unit. e.g. cents
+	 * @param  string        The ID of an existing customer that will be charged in this request.
+	 * @param  string        An arbitrary string which you can attach to a Charge object. It is displayed when in the web interface alongside the charge.
+	 * @param  array  Other options for the charge: capture, metadata, receipt_email etc.
 	 */
-	public function charge_customer( $amount, $customer_id, $desc ) {
+	public function charge_customer( $amount, $customer_id, $desc = NULL, $options = array() ) {
 		$params = array(
 			'amount' => $amount,
-			'currency' => 'usd',
-			'customer' => $customer_id,
-			'description' => $desc
+			'currency' => (isset($this->_conf['stripe_currency']) ? $this->_conf['stripe_currency'] : 'usd'),
+			'customer' => $customer_id
 		);
+
+		if( $desc ) $params['description'] = $desc;
+
+		$sub_options = array(
+			'capture', 'metadata', 'receipt_email', 'shipping', 'statement_descriptor', 
+			'application_fee', 'destination', 'transfer_group', 'on_behalf_of'
+		);
+
+		foreach($options as $key => $value){
+			if(in_array($key, $sub_options)) $params[$key] = $value;
+		}
 		
 		return $this->_send_request( 'charges', $params, STRIPE_METHOD_POST );
 	}
