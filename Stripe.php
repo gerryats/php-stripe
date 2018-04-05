@@ -426,25 +426,34 @@ class Stripe {
 	}
 	
 	/**
-	 * Get information about a specific invoice item
+	 * Retrieve an invoice item. https://stripe.com/docs/api#retrieve_invoiceitem
 	 * 
-	 * @param  string        The invoice item ID
+	 * @param  string  The ID of the desired invoice item.
 	 */
 	public function invoiceitem_info( $invoiceitem_id ) {
 		return $this->_send_request( 'invoiceitems/'.$invoiceitem_id );
 	}
 	
 	/**
-	 * Update an invoice item before is actually charged
+	 * Update an invoice item.  https://stripe.com/docs/api#update_invoiceitem
 	 * 
-	 * @param  string        The invoice item ID
-	 * @param  int           The amount for the item in cents
-	 * @param  string        A free form string describing the charge
+	 * @param  string        The ID of the desired invoice item.
+	 * @param  int           The integer amount in pence of the charge to be applied to the upcoming invoice. If you want to apply a credit to the customer’s account, pass a negative amount.
+	 * @param  string        An arbitrary string which you can attach to the invoice item. The description is displayed in the invoice for easy tracking. This will be unset if you POST an empty value.
+	 * @param boolean  Controls whether discounts apply to this invoice item. Defaults to false for prorations or negative invoice items, and true for all other invoice items. Cannot be set to true for prorations.
+	 * @param array   A set of key/value pairs that you can attach to an invoice item object. It can be useful for storing additional information about the invoice item in a structured format.
+	 * @param int  Non-negative integer. The quantity of units for the invoice item.
+	 * @param int  The integer unit amount in pence of the charge to be applied to the upcoming invoice. This unit_amount will be multiplied by the quantity to get the full amount. If you want to apply a credit to the customer’s account, pass a negative unit_amount.
 	 */
-	public function invoiceitem_update( $invoiceitem_id, $amount, $desc = FALSE ) {
-		$params['amount'] = $amount;
-		$params['currency'] = 'usd';
+	public function invoiceitem_update( $invoiceitem_id, $amount = NULL, $desc = NULL, $discountable = NULL, $metadata = NULL, $quantity = NULL, $unit_amount = NULL ) {
+		$params = array();
+		
+		if( $amount ) $params['amount'] = $amount;
 		if( $desc ) $params['description'] = $desc;
+		if( !is_null($discountable) ) $params['discountable'] = $discountable ? 'true':'false';
+		if( $metadata ) $params['metadata'] = $metadata;
+		if( $quantity ) $params['quantity'] = $quantity;
+		if( $unit_amount ) $params['unit_amount'] = $unit_amount;
 		
 		return $this->_send_request( 'invoiceitems/'.$invoiceitem_id, $params, STRIPE_METHOD_POST );
 	}
