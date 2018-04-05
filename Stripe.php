@@ -396,19 +396,32 @@ class Stripe {
 	}
 	
 	/**
-	 * Register a new invoice item to the upcoming invoice for a given customer
+	 * Create an invoice item.  https://stripe.com/docs/api#create_invoiceitem
 	 * 
-	 * @param  string        The customer ID
-	 * @param  int           The amount to charge in cents
-	 * @param  string        A free form description explaining the charge
+	 * @param  string        The ID of the customer who will be billed when this invoice item is billed.
+	 * @param  int           The integer amount in pence of the charge to be applied to the upcoming invoice. If you want to apply a credit to the customer’s account, pass a negative amount.
+	 * @param  string        An arbitrary string which you can attach to the invoice item. The description is displayed in the invoice for easy tracking. This will be unset if you POST an empty value.
+	 * @param int  Non-negative integer. The quantity of units for the invoice item.
+	 * @param int The integer unit amount in pence of the charge to be applied to the upcoming invoice.
+	 * @param boolean   Controls whether discounts apply to this invoice item. Defaults to false for prorations or negative invoice items, and true for all other invoice items.
+	 * @param string  The ID of an existing invoice to add this invoice item to. 
+	 * @param array A set of key/value pairs that you can attach to an invoice item object. It can be useful for storing additional information about the invoice item in a structured format.
+	 * @param string The ID of a subscription to add this invoice item to. 
 	 */
-	public function invoiceitem_create( $customer_id, $amount, $desc ) {
+	public function invoiceitem_create( $customer_id, $amount = NULL, $desc = NULL, $quantity = NULL, $unit_amount = NULL, $discountable = NULL, $invoice = NULL, $metadata = NULL, $subscription = NULL ) {
 		$params = array(
 			'customer' => $customer_id,
-			'amount' => $amount,
-			'currency' => 'usd',
-			'description' => $desc
+			'currency' => 'usd'
 		);
+
+		if( $amount ) $params['amount'] = $amount;
+		if( $desc ) $params['description'] = $desc;
+		if( $quantity ) $params['quantity'] = $quantity;
+		if( $unit_amount ) $params['unit_amount'] = $unit_amount;
+		if( $discountable ) $params['discountable'] = $discountable;
+		if( $invoice ) $params['invoice'] = $invoice;
+		if( $metadata ) $params['metadata'] = $metadata;
+		if( $subscription ) $params['subscription'] = $subscription;
 		
 		return $this->_send_request( 'invoiceitems', $params, STRIPE_METHOD_POST );
 	}
