@@ -459,26 +459,33 @@ class Stripe {
 	}
 	
 	/**
-	 * Delete a specific invoice item
+	 * Delete an invoice item.  https://stripe.com/docs/api#delete_invoiceitem
 	 * 
-	 * @param  string        The invoice item identifier
+	 * @param  string  The identifier of the invoice item to be deleted.
 	 */
 	public function invoiceitem_delete( $invoiceitem_id ) {
 		return $this->_send_request( 'invoiceitems/'.$invoiceitem_id, array(), STRIPE_METHOD_DELETE );
 	}
 	
 	/**
-	 * Get a list of invoice items
+	 * List all invoice items.  https://stripe.com/docs/api#list_invoiceitems
 	 * 
-	 * @param  string        Customer ID to retrieve invoices only for a given customer
-	 * @param  int           Number of invoices to retrieve, default 10, max 100
+	 * @param  string        The identifier of the customer whose invoice items to return. If none is provided, all invoice items will be returned.
+	 * @param  int           A limit on the number of objects to be returned. Limit can range between 1 and 100, and the default is 10.
 	 * @param  int           Offset to start the list from, default 0
+	 * @param mixed A filter on the list based on the object created field. The value can be a string with an integer Unix timestamp, or it can be a dictionary .
+	 * @param string  A cursor for use in pagination. An object ID that defines your place in the list.
+	 * @param string  A cursor for use in pagination. An object ID that defines your place in the list.
+	 * @param string Only return invoice items belonging to this invoice. If none is provided, all invoice items will be returned. If specifying an invoice, no customer identifier is needed.
 	 */
-	public function invoiceitem_list( $customer_id = FALSE, $count = 10, $offset = 0 ) {
-		$params['count'] = $count;
+	public function invoiceitem_list( $customer_id = FALSE, $limit = 10, $offset = 0, $created = NULL, $ending_before = NULL, $starting_after = NULL, $invoice = NULL ) {
+		$params['limit'] = $limit;
 		$params['offset'] = $offset;
-		if( $customer_id )
-			$params['customer'] = $customer_id;
+		if( $customer_id ) $params['customer'] = $customer_id;
+		if( $created ) $params['created'] = $created;
+		if( $ending_before ) $params['ending_before'] = $ending_before;
+		if( $starting_after ) $params['starting_after'] = $starting_after;
+		if( $invoice ) $params['invoice'] = $invoice;
 		$vars = http_build_query( $params, NULL, '&' );
 		
 		return $this->_send_request( 'invoiceitems?'.$vars );
