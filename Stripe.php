@@ -92,19 +92,19 @@ class Stripe {
 	}
 	
 	/**
-	 * Retrieve information about a specific charge
+	 * Retrieve a charge.  https://stripe.com/docs/api#retrieve_charge
 	 * 
-	 * @param string         The charge ID to query
+	 * @param string  The identifier of the charge to be retrieved.
 	 */
 	public function charge_info( $charge_id ) {
 		return $this->_send_request( 'charges/'.$charge_id );
 	}
 	
 	/**
-	 * Refund a charge
+	 * Refund a charge. - no stripe doc
 	 * 
-	 * @param  string        The charge ID to refund
-	 * @param  int           The amount to refund, defaults to the total amount charged
+	 * @param  string  The identifier of the charge to refund.
+	 * @param  int The amount to refund, defaults to the total amount charged.
 	 */
 	public function charge_refund( $charge_id, $amount = FALSE ) {
 		$amount ? $params = array( 'amount' => $amount ) : $params = array();
