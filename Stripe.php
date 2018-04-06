@@ -334,6 +334,23 @@ class Stripe {
 	public function card_token_info( $token_id ) {
 		return $this->_send_request( 'tokens/'.$token_id );
 	}
+
+	/**
+	 * Create a card. https://stripe.com/docs/api#create_card
+	 * 
+	 * @param  string  Customer or recipient on which to create it.
+	 * @param  mixed  Either a token, like the ones returned by Stripe.js, or a dictionary containing a user's credit card details.
+	 * @param  array A set of key/value pairs that you can attach to a card object. It can be useful for storing additional information about the card in a structured format.
+	 */
+	public function card_create( $id, $source, $metadata = NULL ) {
+		$params = array(
+			'source' => $source
+		);
+		
+		if( $metadata ) $params['metadata'] = $metadata;
+
+		return $this->_send_request( 'customers/'.$id.'/sources', $params, STRIPE_METHOD_POST );
+	}
 	
 	/**
 	 * Create a plan. https://stripe.com/docs/api#create_plan
