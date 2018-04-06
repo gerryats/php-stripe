@@ -44,7 +44,7 @@ class Stripe {
 	public function charge_customer( $amount, $customer_id, $desc = NULL, $options = array() ) {
 		$params = array(
 			'amount' => $amount,
-			'currency' => (isset($this->_conf['stripe_currency']) ? $this->_conf['stripe_currency'] : 'usd'),
+			'currency' => 'usd',
 			'customer' => $customer_id
 		);
 
@@ -63,20 +63,30 @@ class Stripe {
 	}
 	
 	/**
-	 * Create and apply a charge based on credit card information
+	 * Create a charge - card.  https://stripe.com/docs/api#create_charge
 	 * 
-	 * @param  int           The amount to charge in cents ( USD )
-	 * @param  mixed         This can be a card token generated with stripe.js ( recommended ) or
-	 *                       an array with the card information: number, exp_month, exp_year, cvc, name
-	 * @param  string        A free form reference for the charge
+	 * @param  int  A positive integer representing how much to charge, in the smallest currency unit. e.g. cents
+	 * @param  string  A payment source to be charged, such as a credit card. If you also pass a customer ID, the source must be the ID of a source belonging to the customer (e.g., a saved card). Otherwise, if you do not pass a customer ID, the source you provide must be either a token, like the ones returned by Stripe.js, or a dictionary containing a user's credit card details. 
+	 * @param  string  An arbitrary string which you can attach to a Charge object. It is displayed when in the web interface alongside the charge.
+	 * @param  array  Other options for the charge: capture, metadata, receipt_email etc.
 	 */
-	public function charge_card( $amount, $card, $desc ) {
+	public function charge_card( $amount, $source, $desc = NULL, $options = array() ) {
 		$params = array(
 			'amount' => $amount,
 			'currency' => 'usd',
-			'card' => $card,
-			'description' => $desc
+			'source' => $source
 		);
+
+		if( $desc ) $params['description'] = $desc;
+
+		$sub_options = array(
+			'customer', 'capture', 'metadata', 'receipt_email', 'shipping', 'statement_descriptor', 
+			'application_fee', 'destination', 'transfer_group', 'on_behalf_of'
+		);
+
+		foreach($options as $key => $value){
+			if(in_array($key, $sub_options)) $params[$key] = $value;
+		}
 		
 		return $this->_send_request( 'charges', $params, STRIPE_METHOD_POST );
 	}
