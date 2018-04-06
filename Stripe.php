@@ -128,6 +128,24 @@ class Stripe {
 		$amount ? $params = array( 'amount' => $amount ) : $params = array();
 		return $this->_send_request( 'charges/'.$charge_id.'/refund', $params, STRIPE_METHOD_POST );
 	}
+
+	/**
+	 * Capture a charge. https://stripe.com/docs/api#capture_charge
+	 * 
+	 * @param  string  The identifier of the charge to capture.
+	 * @param  array  Options for the charge capture.
+	 */
+	public function charge_capture( $charge_id, $options = array() ) {
+		$params = array();
+
+		$sub_options = array('amount', 'application_fee', 'destination', 'receipt_email', 'statement_descriptor');
+
+		foreach($options as $key => $value){
+			if(in_array($key, $sub_options)) $params[$key] = $value;
+		}
+
+		return $this->_send_request( 'charges/'.$charge_id.'/capture', $params, STRIPE_METHOD_POST );
+	}
 	
 	/**
 	 * List all charges.  https://stripe.com/docs/api#list_charges
