@@ -99,6 +99,24 @@ class Stripe {
 	public function charge_info( $charge_id ) {
 		return $this->_send_request( 'charges/'.$charge_id );
 	}
+
+	/**
+	 * Update a charge. https://stripe.com/docs/api#update_charge
+	 * 
+	 * @param  string  The identifier of the charge to update.
+	 * @param  array  Options for the charge update.
+	 */
+	public function charge_update( $charge_id, $options = array() ) {
+		$params = array();
+
+		$sub_options = array('customer', 'description', 'fraud_details', 'metadata', 'receipt_email', 'shipping', 'transfer_group');
+
+		foreach($options as $key => $value){
+			if(in_array($key, $sub_options)) $params[$key] = $value;
+		}
+
+		return $this->_send_request( 'charges/'.$charge_id, $params, STRIPE_METHOD_POST );
+	}
 	
 	/**
 	 * Refund a charge. - no stripe doc
