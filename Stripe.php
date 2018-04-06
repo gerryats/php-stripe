@@ -112,17 +112,22 @@ class Stripe {
 	}
 	
 	/**
-	 * Get a list of charges, either general or for a certain customer
+	 * List all charges.  https://stripe.com/docs/api#list_charges
 	 * 
-	 * @param  int           The number of charges to return, default 10, max 100
-	 * @param  int           Offset to apply to the list, default 0
-	 * @param  string        A customer ID to return only charges for that customer
+	 * @param  int  A limit on the number of objects to be returned. Limit can range between 1 and 100, and the default is 10.
+	 * @param  string  Only return charges for the customer specified by this customer ID.
+	 * @param  array  Other options for the charge: created, ending_before, source, starting_after, transfer_group.
 	 */
-	public function charge_list( $count = 10, $offset = 0, $customer_id = FALSE ) {
-		$params['count'] = $count;
-		$params['offset'] = $offset;
-		if( $customer_id )
-			$params['customer'] = $customer_id;
+	public function charge_list( $limit = 10, $customer_id = NULL, $options = array() ) {
+		$params['limit'] = $limit;
+		if( $customer_id ) $params['customer'] = $customer_id;
+
+		$sub_options = array('created', 'ending_before', 'source', 'starting_after', 'transfer_group');
+
+		foreach($options as $key => $value){
+			if(in_array($key, $sub_options)) $params[$key] = $value;
+		}
+
 		$vars = http_build_query( $params, NULL, '&' );
 		
 		return $this->_send_request( 'charges?'.$vars );
