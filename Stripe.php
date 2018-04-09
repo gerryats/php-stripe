@@ -397,6 +397,45 @@ class Stripe {
 		}
 		return $this->_send_request( $url );
 	}
+
+	/**
+	 * Create a coupon.  https://stripe.com/docs/api#create_coupon
+	 * 
+	 * @param  string        Unique string of your choice that will be used to identify this coupon when applying it to a customer. This is often a specific code you’ll give to your customer to use when signing up (e.g., FALL25OFF). If you don’t want to specify a particular code, you can leave the ID blank and we’ll generate a random code for you.
+	 * @param  string     Specifies how long the discount will be in effect. Can be forever, once, or repeating.
+	 * @param  int           A positive integer representing the amount to subtract from an invoice total (required if percent_off is not passed).
+	 * @param  int        Required only if duration is repeating, in which case it must be a positive integer that specifies the number of months the discount will be in effect.
+	 * @param  int      A positive integer specifying the number of times the coupon can be redeemed before it’s no longer valid. For example, you might have a 50% off coupon that the first 20 readers of your blog can use.
+	 * @param  array    A set of key/value pairs that you can attach to a coupon object. It can be useful for storing additional information about the coupon in a structured format.
+	 * @param  int           A positive integer between 1 and 100 that represents the discount the coupon will apply (required if amount_off is not passed).
+	 * @param  string    Unix timestamp specifying the last time at which the coupon can be redeemed. After the redeem_by date, the coupon can no longer be applied to new customers.
+	 */
+	public function coupon_create( $coupon_id = null, $duration, $amount_off = null, $duration_in_months = null, $max_redemptions = null, $metadata = null, $percent_off = null, $redeem_by = null) {
+		$params = array(
+			'duration' => $duration
+		);
+		if( $coupon_id ) $params['id'] = $coupon_id;
+		if( $amount_off ) {
+			$params['amount_off'] = $amount_off;
+			$params['currency'] = 'usd';
+		} 
+		if( $duration_in_months ) $params['duration_in_months'] = $duration_in_months;
+		if( $max_redemptions ) $params['max_redemptions'] = $max_redemptions;
+		if( $metadata ) $params['metadata'] = $metadata;
+		if( !$amount_off && $percent_off ) $params['percent_off'] = $percent_off;
+		if( $redeem_by ) $params['redeem_by'] = $redeem_by;
+			
+		return $this->_send_request( 'coupons', $params, STRIPE_METHOD_POST );
+	}
+
+	/**
+	 * Delete a coupon.  https://stripe.com/docs/api#delete_coupon
+	 * 
+	 * @param  string        The identifier of the coupon to be deleted.
+	 */
+	public function coupon_delete( $coupon_id ) {
+		return $this->_send_request( 'coupons/'.$coupon_id, array(), STRIPE_METHOD_DELETE );
+	}
 	
 	/**
 	 * Retrieve an upcoming invoice. https://stripe.com/docs/api#upcoming_invoice
