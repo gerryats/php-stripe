@@ -338,6 +338,15 @@ class Stripe {
 		
 		return $this->_send_request( 'subscription_items', $params, STRIPE_METHOD_POST );
 	}
+
+	/**
+	 * Retrieve a subscription item.  https://stripe.com/docs/api#retrieve_subscription_item
+	 * 
+	 * @param  string  The identifier of the subscription item to retrieve.
+	 */
+	public function subscription_item_info( $item ) {
+		return $this->_send_request( 'subscription_items/'.$item );
+	}
 	
 	/**
 	 * Retrieve an upcoming invoice. https://stripe.com/docs/api#upcoming_invoice
