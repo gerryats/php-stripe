@@ -347,6 +347,26 @@ class Stripe {
 	public function subscription_item_info( $item ) {
 		return $this->_send_request( 'subscription_items/'.$item );
 	}
+
+	/**
+	 * Update a subscription item.  https://stripe.com/docs/api#update_subscription_item
+	 * 
+	 * @param  string  The identifier of the subscription item to modify.
+	 * @param  array  Options for the subscription item to update: metadata, plan, prorate, proration_date and quantity.
+	 */
+	public function subscription_item_update( $item, $options = array() ) {
+		$params = array();
+
+		$sub_options = array(
+			'metadata', 'plan', 'prorate', 'proration_date', 'quantity'
+		);
+
+		foreach($options as $key => $value){
+			if(in_array($key, $sub_options)) $params[$key] = $value;
+		}
+
+		return $this->_send_request( 'subscription_items/'.$item, $params, STRIPE_METHOD_POST );
+	}
 	
 	/**
 	 * Retrieve an upcoming invoice. https://stripe.com/docs/api#upcoming_invoice
