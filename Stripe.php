@@ -351,6 +351,16 @@ class Stripe {
 
 		return $this->_send_request( 'customers/'.$id.'/sources', $params, STRIPE_METHOD_POST );
 	}
+
+	/**
+	 * Retrieve a card.  https://stripe.com/docs/api#retrieve_card
+	 * 
+	 * @param  string  The customer ID.
+	 * @param  string  The ID of the card to be retrieved.
+	 */
+	public function card_info( $customer_id, $card_id ) {
+		return $this->_send_request( 'customers/'.$customer_id.'/sources/'.$card_id );
+	}
 	
 	/**
 	 * Create a plan. https://stripe.com/docs/api#create_plan
