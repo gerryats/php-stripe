@@ -376,6 +376,27 @@ class Stripe {
 	public function subscription_item_delete( $item ) {
 		return $this->_send_request( 'subscription_items/'.$item, array(), STRIPE_METHOD_DELETE );
 	}
+
+	/**
+	 *  List all subscription items.  https://stripe.com/docs/api#list_subscription_items
+	 * 
+	 * @param  string  The ID of the subscription whose items will be retrieved.
+	 * @param  int  A limit on the number of objects to be returned. Limit can range between 1 and 100, and the default is 10.
+	 * @param string A cursor for use in pagination. An object ID that defines your place in the list.
+	 * @param string A cursor for use in pagination. An object ID that defines your place in the list.
+	 */
+	public function subscription_item_list( $subscription, $limit = 10, $starting_after = NULL, $ending_before = NULL ) {
+		$params = array('subscription'=>$subscription, 'limit'=>$limit);
+		if($starting_after) $params['starting_after'] = $starting_after;
+		if($ending_before) $params['ending_before'] = $ending_before;
+
+		$url = 'subscription_items';
+		if($params){
+			$query_string = http_build_query($params);
+			$url .=  '?'.$query_string;
+		}
+		return $this->_send_request( $url );
+	}
 	
 	/**
 	 * Retrieve an upcoming invoice. https://stripe.com/docs/api#upcoming_invoice
