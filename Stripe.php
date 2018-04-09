@@ -393,6 +393,24 @@ class Stripe {
 	public function card_delete( $customer_id, $card_id) {
 		return $this->_send_request( 'customers/'.$customer_id.'/sources/'.$card_id, array(), STRIPE_METHOD_DELETE );
 	}
+
+	/**
+	 * List all cards.  https://stripe.com/docs/api#list_cards
+	 * 
+	 * @param  string  The ID of the customer whose cards will be retrieved.
+	 * @param  int  A limit on the number of objects to be returned. Limit can range between 1 and 100, and the default is 10.
+	 * @param string A cursor for use in pagination. An object ID that defines your place in the list.
+	 * @param string A cursor for use in pagination. An object ID that defines your place in the list.
+	 */
+	public function card_list( $customer_id, $limit = 10, $starting_after = NULL, $ending_before = NULL) {
+		$params['limit'] = $limit;
+		if($ending_before) $params['ending_before'] = $ending_before;
+		if($starting_after) $params['starting_after'] = $starting_after;
+
+		$vars = http_build_query( $params, NULL, '&' );
+		
+		return $this->_send_request( 'customers/'.$customer_id.'/sources?'.$vars );
+	}
 	
 	/**
 	 * Create a plan. https://stripe.com/docs/api#create_plan
