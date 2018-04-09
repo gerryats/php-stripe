@@ -361,6 +361,28 @@ class Stripe {
 	public function card_info( $customer_id, $card_id ) {
 		return $this->_send_request( 'customers/'.$customer_id.'/sources/'.$card_id );
 	}
+
+	/**
+	 * Update a card.  https://stripe.com/docs/api#update_card
+	 * 
+	 * @param  string  The customer ID.
+	 * @param  string  The ID of the card to be updated.
+	 * @param  array  Card details to update: address_city, address_country etc.
+	 */
+	public function card_update( $customer_id, $card_id, $options = array() ) {
+		$params = array();
+		
+		$sub_options = array(
+			'address_city', 'address_country', 'address_line1', 'address_line2', 'address_state', 
+			'address_zip', 'exp_month', 'exp_year', 'metadata', 'name'
+		);
+
+		foreach($options as $key => $value){
+			if(in_array($key, $sub_options)) $params[$key] = $value;
+		}
+
+		return $this->_send_request( 'customers/'.$customer_id.'/sources/'.$card_id,  $params, STRIPE_METHOD_POST );
+	}
 	
 	/**
 	 * Create a plan. https://stripe.com/docs/api#create_plan
