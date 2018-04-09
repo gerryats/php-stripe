@@ -284,6 +284,60 @@ class Stripe {
 		 
 		return $this->_send_request( $url, array(), STRIPE_METHOD_DELETE );
 	}
+
+	/**
+	 * Retrieve a subscription.  https://stripe.com/docs/api#retrieve_subscription
+	 * 
+	 * @param  string   ID of subscription to retrieve.
+	 */
+	public function subscription_info( $sub_id ) {
+		return $this->_send_request( 'subscriptions/'.$sub_id );
+	}
+
+	/**
+	 * Update a subscription.  https://stripe.com/docs/api#update_subscription
+	 * 
+	 * @param  string         ID of subscription to be updated.
+	 * @param  array  Arguments to change
+	 */
+	public function subscription_update( $sub_id, $params ) {
+		return $this->_send_request( 'subscriptions/'.$sub_id, $params, STRIPE_METHOD_POST );
+	}
+
+	/**
+	 * List subscriptions
+	 * 
+	 * @param  array Arguments - https://stripe.com/docs/api#list_subscriptions
+	 */
+	public function subscription_list( $params = array() ) {
+		$url = 'subscriptions';
+		if($params){
+			$query_string = http_build_query($params);
+			$url .=  '?'.$query_string;
+		}
+		return $this->_send_request( $url );
+	}
+
+	/**
+	 * Create a subscription item.  https://stripe.com/docs/api#create_subscription_item
+	 * 
+	 * @param  string        The identifier of the subscription to modify.
+	 * @param  string        The identifier of the plan to add to the subscription.
+	 * @param  array         Configuration options for the subscription item:metadata, prorate, proration_date and quantity.
+	 */
+	public function subscription_item_create( $subscription, $plan, $options = array() ) {
+		$params = array('subscription' => $subscription, 'plan' => $plan);
+
+		$sub_options = array(
+			'metadata', 'prorate', 'proration_date', 'quantity'
+		);
+
+		foreach($options as $key => $value){
+			if(in_array($key, $sub_options)) $params[$key] = $value;
+		}
+		
+		return $this->_send_request( 'subscription_items', $params, STRIPE_METHOD_POST );
+	}
 	
 	/**
 	 * Retrieve an upcoming invoice. https://stripe.com/docs/api#upcoming_invoice
