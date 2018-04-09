@@ -422,8 +422,13 @@ class Stripe {
 	 * @param  int  The number of intervals between subscription billings. For example, interval=month and interval_count=3 bills every 3 months.
 	 * @param  array A set of key/value pairs that you can attach to a plan object. It can be useful for storing additional information about the plan in a structured format.
 	 * @param string A brief description of the plan, hidden from customers.
+	 * @param string  Describes how to compute the price per period. Either per_unit or tiered.
+	 * @param array  Each element represents a pricing tier. This parameter requires billing_scheme to be set to tiered. 
+	 * @param string Defines if the tiering price should be graduated or volume based.
+	 * @param dictionary  Apply a transformation to the reported usage or set quantity before computing the billed price. Cannot be combined with tiers.
+	 * @param string  Configures how the quantity per period should be determined, can be either metered or licensed. 
 	 */
-	public function plan_create( $id = NULL, $interval, $product, $amount = NULL, $interval_count = NULL, $metadata = NULL, $nickname = NULL) {
+	public function plan_create( $id = NULL, $interval, $product, $amount = NULL, $interval_count = NULL, $metadata = NULL, $nickname = NULL, $billing_scheme = NULL, $tiers = NULL, $tiers_mode = NULL, $transform_usage = NULL, $usage_type = NULL) {
 		$params = array(
 			'currency' => 'usd',
 			'interval' => $interval,
@@ -434,6 +439,11 @@ class Stripe {
 		if($interval_count) $params['interval_count'] = $interval_count;
 		if($metadata) $params['metadata'] = $metadata;
 		if($nickname) $params['nickname'] = $nickname;
+		if($billing_scheme) $params['billing_scheme'] = $billing_scheme;
+		if($tiers) $params['tiers'] = $tiers;
+		if($tiers_mode) $params['tiers_mode'] = $tiers_mode;
+		if($transform_usage) $params['transform_usage'] = $transform_usage;
+		if($usage_type) $params['usage_type'] = $usage_type;
 			
 		return $this->_send_request( 'plans', $params, STRIPE_METHOD_POST );
 	}
