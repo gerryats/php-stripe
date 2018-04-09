@@ -381,7 +381,17 @@ class Stripe {
 			if(in_array($key, $sub_options)) $params[$key] = $value;
 		}
 
-		return $this->_send_request( 'customers/'.$customer_id.'/sources/'.$card_id,  $params, STRIPE_METHOD_POST );
+		return $this->_send_request( 'customers/'.$customer_id.'/sources/'.$card_id, $params, STRIPE_METHOD_POST );
+	}
+
+	/**
+	 * Delete a card.  https://stripe.com/docs/api#delete_card
+	 * 
+	 * @param  string  The customer ID.
+	 * @param  string  The ID of the source to be deleted.
+	 */
+	public function card_delete( $customer_id, $card_id) {
+		return $this->_send_request( 'customers/'.$customer_id.'/sources/'.$card_id, array(), STRIPE_METHOD_DELETE );
 	}
 	
 	/**
