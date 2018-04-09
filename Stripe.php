@@ -429,6 +429,26 @@ class Stripe {
 	}
 
 	/**
+	 * Retrieve a coupon.  https://stripe.com/docs/api#retrieve_coupon
+	 * 
+	 * @param  string        The ID of the desired coupon.
+	 */
+	public function coupon_info( $coupon_id ) {
+		return $this->_send_request( 'coupons/'.$coupon_id );
+	}
+
+	/**
+	 * Update a coupon.  https://stripe.com/docs/api#update_coupon
+	 * 
+	 * @param  string   The identifier of the coupon to be updated.
+	 */
+	public function coupon_update( $coupon_id, $metadata = NULL ) {
+		$params = array();
+		if( $metadata ) $params['metadata'] = $metadata;
+		return $this->_send_request( 'coupons/'.$coupon_id, $params, STRIPE_METHOD_POST );
+	}
+
+	/**
 	 * Delete a coupon.  https://stripe.com/docs/api#delete_coupon
 	 * 
 	 * @param  string        The identifier of the coupon to be deleted.
