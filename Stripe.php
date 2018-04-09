@@ -367,6 +367,15 @@ class Stripe {
 
 		return $this->_send_request( 'subscription_items/'.$item, $params, STRIPE_METHOD_POST );
 	}
+
+	/**
+	 * Delete a subscription item.  https://stripe.com/docs/api#delete_subscription_item
+	 * 
+	 * @param  string  The identifier of the subscription item to delete.
+	 */
+	public function subscription_item_delete( $item ) {
+		return $this->_send_request( 'subscription_items/'.$item, array(), STRIPE_METHOD_DELETE );
+	}
 	
 	/**
 	 * Retrieve an upcoming invoice. https://stripe.com/docs/api#upcoming_invoice
