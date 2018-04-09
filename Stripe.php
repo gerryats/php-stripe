@@ -456,6 +456,24 @@ class Stripe {
 	public function coupon_delete( $coupon_id ) {
 		return $this->_send_request( 'coupons/'.$coupon_id, array(), STRIPE_METHOD_DELETE );
 	}
+
+	/**
+	 * List all coupons.  https://stripe.com/docs/api#list_coupons
+	 * 
+	 * @param  int   A limit on the number of objects to be returned. Limit can range between 1 and 100, and the default is 10.
+	 * @param mixed A filter on the list based on the object created field. The value can be a string with an integer Unix timestamp, or it can be a dictionary .
+	 * @param string  A cursor for use in pagination. An object ID that defines your place in the list.
+	 * @param string  A cursor for use in pagination. An object ID that defines your place in the list.
+	 */
+	public function coupon_list( $limit = 10, $created = NULL, $ending_before = NULL, $starting_after = NULL ) {
+		$params['limit'] = $limit;
+		if( $created ) $params['created'] = $created;
+		if( $ending_before ) $params['ending_before'] = $ending_before;
+		if( $starting_after ) $params['starting_after'] = $starting_after;
+		$vars = http_build_query( $params, NULL, '&' );
+		
+		return $this->_send_request( 'coupons?'.$vars );
+	}
 	
 	/**
 	 * Retrieve an upcoming invoice. https://stripe.com/docs/api#upcoming_invoice
