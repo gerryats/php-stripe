@@ -483,6 +483,15 @@ class Stripe {
 	public function customer_discount_delete( $customer_id ) {
 		return $this->_send_request( 'customers/'.$customer_id.'/discount', array(), STRIPE_METHOD_DELETE );
 	}
+
+	/**
+	 * Delete a subscription discount.  https://stripe.com/docs/api#delete_subscription_discount
+	 * 
+	 * @param  string        The subscription ID
+	 */
+	public function subscription_discount_delete( $subscription_id ) {
+		return $this->_send_request( 'subscriptions/'.$subscription_id.'/discount', array(), STRIPE_METHOD_DELETE );
+	}
 	
 	/**
 	 * Retrieve an upcoming invoice. https://stripe.com/docs/api#upcoming_invoice
