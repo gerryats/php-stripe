@@ -742,6 +742,29 @@ class Stripe {
 	public function invoice_info( $invoice_id ) {
 		return $this->_send_request( 'invoices/'.$invoice_id );
 	}
+
+	/**
+	 * Retrieve an invoice's line items.  https://stripe.com/docs/api#invoice_lines
+	 * 
+	 * @param  string   The ID of the invoice containing the lines to be retrieved. Use a value of 'upcoming' to retrieve the upcoming invoice.
+	 * @param  array  Options for the invoice: coupon, customer, ending_before, starting_after etc.
+	 */
+	public function invoice_lines_list( $invoice_id, $limit = 10, $options = array() ) {
+		$params['limit'] = $limit;
+		
+		$sub_options = array(
+			'coupon', 'customer', 'ending_before', 'starting_after', 'subscription', 'subscription_billing_cycle_anchor', 'subscription_items',
+			'subscription_prorate', 'subscription_proration_date', 'subscription_tax_percent', 'subscription_trial_end'
+		);
+
+		foreach($options as $key => $value){
+			if(in_array($key, $sub_options)) $params[$key] = $value;
+		}
+
+		$vars = http_build_query( $params, NULL, '&' );
+
+		return $this->_send_request( 'invoices/'.$invoice_id.'/lines?'.$vars );
+	}
 	
 	/**
 	 * List all invoices. https://stripe.com/docs/api#list_invoices
