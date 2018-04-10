@@ -474,6 +474,15 @@ class Stripe {
 		
 		return $this->_send_request( 'coupons?'.$vars );
 	}
+
+	/**
+	 * Delete a customer discount.  https://stripe.com/docs/api#delete_discount
+	 * 
+	 * @param  string        The customer ID
+	 */
+	public function customer_discount_delete( $customer_id ) {
+		return $this->_send_request( 'customers/'.$customer_id.'/discount', array(), STRIPE_METHOD_DELETE );
+	}
 	
 	/**
 	 * Retrieve an upcoming invoice. https://stripe.com/docs/api#upcoming_invoice
