@@ -712,6 +712,27 @@ class Stripe {
 		
 		return $this->_send_request( 'plans?'.$vars );
 	}
+
+	/**
+	 * Create an invoice.  https://stripe.com/docs/api#create_invoice
+	 * 
+	 * @param  string   The ID of the customer.
+	 * @param  array  Options for the invoice: billing, description, metadata, statement_descriptor etc.
+	 */
+	public function invoice_create( $customer, $options = array() ) {
+		$params = array('customer'=>$customer);
+
+		$sub_options = array(
+			'application_fee', 'billing', 'days_until_due', 'description', 'due_date', 
+			'metadata', 'statement_descriptor', 'subscription', 'tax_percent'
+		);
+
+		foreach($options as $key => $value){
+			if(in_array($key, $sub_options)) $params[$key] = $value;
+		}
+
+		return $this->_send_request( 'invoices', $params, STRIPE_METHOD_POST );
+	}
 	
 	/**
 	 * Retrieve an invoice. https://stripe.com/docs/api#retrieve_invoice
