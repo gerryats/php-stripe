@@ -1009,6 +1009,34 @@ class Stripe {
 		if(isset($params['shippable'])) $params['shippable'] = $params['shippable'] ? 'true':'false'; 
 		return $this->_send_request( 'products/'.$product_id, $params, STRIPE_METHOD_POST );
 	}
+
+	/**
+	 * List all products.  https://stripe.com/docs/api#list_products
+	 * 
+	 * @param  int  A limit on the number of objects to be returned. Limit can range between 1 and 100, and the default is 10.
+	 * @param string  A cursor for use in pagination. An object ID that defines your place in the list.
+	 * @param string  A cursor for use in pagination. An object ID that defines your place in the list.
+	 * @param string  Only return products of this type.
+	 * @param mixed  A filter on the list based on the object created field. The value can be a string with an integer Unix timestamp, or it can be a dictionary.
+	 * @param boolean  Only return products that are active or inactive.
+	 * @param boolean  Only return products that can be shipped.
+	 * @param array  Only return products with the given IDs.
+	 * @param string  Only return products with the given url.
+	 */
+	public function product_list( $limit = 10, $starting_after = NULL,  $ending_before = NULL, $type = NULL, $created = NULL, $active = NULL, $shippable = NULL, $ids = NULL, $url = NULL) {
+		$params['limit'] = $limit;
+		if( $starting_after ) $params['starting_after'] = $starting_after;
+		if( $ending_before ) $params['ending_before'] = $ending_before;
+		if( $type ) $params['type'] = $type;
+		if( $created ) $params['created'] = $created;
+		if( !is_null($active) ) $params['active'] = $active ? 'true':'false'; 
+		if( !is_null($shippable) ) $params['shippable'] = $shippable ? 'true':'false'; 
+		if( $ids ) $params['ids'] = $ids;
+		if( $url ) $params['url'] = $url;
+		$vars = http_build_query( $params, NULL, '&' );
+		
+		return $this->_send_request( 'products?'.$vars );
+	}
 	
 	/**
 	 * Private utility function that prepare and send the request to the API servers
