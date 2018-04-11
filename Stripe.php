@@ -786,6 +786,22 @@ class Stripe {
 
 		return $this->_send_request( 'invoices/'.$invoice_id, $params, STRIPE_METHOD_POST );
 	}
+
+	/**
+	 * Pay an invoice.  https://stripe.com/docs/api#pay_invoice
+	 * 
+	 * @param  string  ID of invoice to pay.
+	 * @param  boolean Determines if invoice should be forgiven if source has insufficient funds to fully pay the invoice.
+	 * @param  string  A payment source to be charged. The source must be the ID of a source belonging to the customer associated with the invoice being paid.
+	 */
+	public function invoice_pay( $invoice_id, $forgive = NULL,  $source = NULL) {
+		$params = array();
+
+		if( !is_null($forgive) ) $params['forgive'] = $forgive ? 'true':'false';
+		if( $source ) $params['source'] = $source;
+
+		return $this->_send_request( 'invoices/'.$invoice_id.'/pay', $params, STRIPE_METHOD_POST );
+	}
 	
 	/**
 	 * List all invoices. https://stripe.com/docs/api#list_invoices
