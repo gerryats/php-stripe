@@ -952,6 +952,15 @@ class Stripe {
 			
 		return $this->_send_request( 'products', $params, STRIPE_METHOD_POST );
 	}
+
+	/**
+	 * Retrieve a product.  https://stripe.com/docs/api#retrieve_service_product, https://stripe.com/docs/api#retrieve_product
+	 * 
+	 * @param  string  The identifier of the product to be retrieved.
+	 */
+	public function product_info( $product_id ) {
+		return $this->_send_request( 'products/'.$product_id );
+	}
 	
 	/**
 	 * Private utility function that prepare and send the request to the API servers
