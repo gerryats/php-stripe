@@ -494,31 +494,6 @@ class Stripe {
 	}
 	
 	/**
-	 * Retrieve an upcoming invoice. https://stripe.com/docs/api#upcoming_invoice
-	 * 
-	 * @param  string        The identifier of the customer whose upcoming invoice you’d like to retrieve.
-	 * @param  array         Configuration options for the upcoming invoice: coupon, subscription, subscription_tax_percent etc.
-	 */
-	public function customer_upcoming_invoice( $customer_id, $options = array() ) {
-		$url = 'invoices/upcoming';
-		$params = array('customer'=>$customer_id);
-
-		$sub_options = array(
-			'coupon', 'invoice_items', 'subscription', 'subscription_billing_cycle_anchor', 'subscription_items',
-			'subscription_prorate', 'subscription_proration_date', 'subscription_tax_percent', 'subscription_trial_end'
-		);
-
-		foreach($options as $key => $value){
-			if(in_array($key, $sub_options)) $params[$key] = $value;
-		}
-
-		$query_string = http_build_query($params);
-		$url .=  '?'.$query_string;
-
-		return $this->_send_request( $url );
-	}
-	
-	/**
 	 * Create a card token. https://stripe.com/docs/api#create_card_token
 	 * 
 	 * @param  mixed  The card this token will represent. If you also pass in a customer, the card must be the ID of a card belonging to the customer. Otherwise, if you do not pass in a customer, this is a dictionary containing a user's credit card details, with the options described below.
@@ -764,6 +739,52 @@ class Stripe {
 		$vars = http_build_query( $params, NULL, '&' );
 
 		return $this->_send_request( 'invoices/'.$invoice_id.'/lines?'.$vars );
+	}
+
+	/**
+	 * Retrieve an upcoming invoice. https://stripe.com/docs/api#upcoming_invoice
+	 * 
+	 * @param  string        The identifier of the customer whose upcoming invoice you’d like to retrieve.
+	 * @param  array         Configuration options for the upcoming invoice: coupon, subscription, subscription_tax_percent etc.
+	 */
+	public function customer_upcoming_invoice( $customer_id, $options = array() ) {
+		$url = 'invoices/upcoming';
+		$params = array('customer'=>$customer_id);
+
+		$sub_options = array(
+			'coupon', 'invoice_items', 'subscription', 'subscription_billing_cycle_anchor', 'subscription_items',
+			'subscription_prorate', 'subscription_proration_date', 'subscription_tax_percent', 'subscription_trial_end'
+		);
+
+		foreach($options as $key => $value){
+			if(in_array($key, $sub_options)) $params[$key] = $value;
+		}
+
+		$query_string = http_build_query($params);
+		$url .=  '?'.$query_string;
+
+		return $this->_send_request( $url );
+	}
+
+	/**
+	 * Update an invoice.  https://stripe.com/docs/api#update_invoice
+	 * 
+	 * @param  string   The ID of the invoice to update.
+	 * @param  array  Options for the invoice: billing, description, metadata, statement_descriptor etc.
+	 */
+	public function invoice_update( $invoice_id, $options = array() ) {
+		$params = array();
+
+		$sub_options = array(
+			'application_fee', 'closed', 'days_until_due', 'description', 'due_date', 'forgiven',
+			'metadata', 'paid', 'statement_descriptor', 'tax_percent'
+		);
+
+		foreach($options as $key => $value){
+			if(in_array($key, $sub_options)) $params[$key] = $value;
+		}
+
+		return $this->_send_request( 'invoices/'.$invoice_id, $params, STRIPE_METHOD_POST );
 	}
 	
 	/**
