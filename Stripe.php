@@ -997,6 +997,18 @@ class Stripe {
 	public function product_info( $product_id ) {
 		return $this->_send_request( 'products/'.$product_id );
 	}
+
+	/**
+	 * Update a product.  https://stripe.com/docs/api#update_product
+	 * 
+	 * @param  string        The identifier of the product to be updated.
+	 * @param  array   Properties to be updated.
+	 */
+	public function product_update( $product_id, $params ) {
+		if(isset($params['active'])) $params['active'] = $params['active'] ? 'true':'false'; 
+		if(isset($params['shippable'])) $params['shippable'] = $params['shippable'] ? 'true':'false'; 
+		return $this->_send_request( 'products/'.$product_id, $params, STRIPE_METHOD_POST );
+	}
 	
 	/**
 	 * Private utility function that prepare and send the request to the API servers
