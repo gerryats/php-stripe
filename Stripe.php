@@ -1011,6 +1011,15 @@ class Stripe {
 	}
 
 	/**
+	 * Delete a product.  https://stripe.com/docs/api#delete_product
+	 * 
+	 * @param  string  The ID of the product to delete.
+	 */
+	public function product_delete( $product_id ) {
+		return $this->_send_request( 'products/'.$product_id, array(), STRIPE_METHOD_DELETE );
+	}
+
+	/**
 	 * List all products.  https://stripe.com/docs/api#list_products
 	 * 
 	 * @param  int  A limit on the number of objects to be returned. Limit can range between 1 and 100, and the default is 10.
